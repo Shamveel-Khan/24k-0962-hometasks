@@ -91,38 +91,87 @@ public:
         temp->next = list->head;
     }
 
-    // New function: sort the linked list using extra space
     void sortList()
     {
         if (!head || !head->next)
-            return; // nothing to sort
-
-        // Step 1: convert to vector
+            return;
         vector<int> arr = backToVector();
 
-        // Step 2: sort vector
         sort(arr.begin(), arr.end());
 
-        // Step 3: rebuild linked list
         node *curr = head;
         for (int val : arr)
         {
-            curr->data = val; // just overwrite instead of rebuilding nodes
+            curr->data = val;
             curr = curr->next;
         }
     }
-    node* findMiddle() const {
-        if (!head) return nullptr;
+    node *findMiddle() const
+    {
+        if (!head)
+            return nullptr;
 
-        node* slow = head;
-        node* fast = head;
+        node *slow = head;
+        node *fast = head;
 
-        while (fast && fast->next) {
+        while (fast && fast->next)
+        {
             slow = slow->next;
             fast = fast->next->next;
         }
 
-        return slow; 
+        return slow;
+    }
+
+   void mergeSortedList(linkedList *list)
+    {
+        node *temp2 = list->head;
+
+        while (temp2 && temp2->data < head->data)
+        {
+            node *newNode = new node(temp2->data, head);
+            head = newNode;           
+            temp2 = temp2->next;      
+        }
+
+        node *temp = head;
+        while (temp2)
+        {
+            if (temp->next == nullptr || temp->next->data >= temp2->data)
+            {
+                node *newNode = new node(temp2->data, temp->next);
+                temp->next = newNode;
+
+                temp2 = temp2->next;
+                temp = temp->next;
+            }
+            else
+            {
+                temp = temp->next;
+            }
+        }
+    }
+void removeDuplicates()
+{
+        if (!head || !head->next) return;
+
+        vector<int> arr = backToVector();
+
+        sort(arr.begin(), arr.end());   
+        arr.erase(unique(arr.begin(), arr.end()), arr.end()); 
+
+        node* curr = head;
+        for (int val : arr) {
+            curr->data = val;
+            if (!curr->next && &val != &arr.back()) {
+                curr->next = new node(0);
+            }
+            curr = curr->next;
+        }
+
+        curr = head;
+        for (int i = 0; i < arr.size() - 1; i++) curr = curr->next;
+        curr->next = nullptr;
     }
 
 };
@@ -140,7 +189,7 @@ int main()
     cout << "\nAfter sorting: \n";
     list->print();
 
-    vector<int> arr2 = {6, 2, 4, 0};
+    vector<int> arr2 = {6, 2, 4, 5, 0};
     linkedList *list2 = linkedList::fromVector(arr2);
 
     cout << "\nNew List: \n";
@@ -151,10 +200,18 @@ int main()
     cout << "\nAfter concatenating new list: \n";
     list->print();
 
-    node* middle = list->findMiddle();
+    node *middle = list->findMiddle();
     if (middle)
         cout << "Middle element: " << middle->data << endl;
     else
         cout << "List is empty!" << endl;
-    return 0;
+
+    list2->sortList();
+    list2->print();
+
+    list->mergeSortedList(list2);
+    list->print();
+
+    list->removeDuplicates();
+    list->print();
 }
