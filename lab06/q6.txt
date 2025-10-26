@@ -1,0 +1,18 @@
+A queue is the best data structure because it follows the
+FIFO (First In, First Out) rule, which means that the first
+order received is processed first.
+
+How it works:
+
+Enqueue: Add a new order (item and quantity) to the back.
+
+Dequeue: Take the order off the front when it is done.
+
+Avoid problems:
+
+Overflow: Use a queue that changes (linked list).
+
+Underflow: Before removing, make sure the queue is empty.
+
+Printing orders: Print each order as it is dequeued to show 
+the order in which they were received.
