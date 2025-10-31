@@ -35,8 +35,6 @@ private:
                 node->left = new TourPackage(name);
             else if (side == 'R' && node->right == nullptr)
                 node->right = new TourPackage(name);
-            else
-                cout << "Cannot add. Child already exists.\n";
             return node;
         }
         add(node->left, parent, name, side);
@@ -52,65 +50,34 @@ public:
     void createRoot(string name) {
         if (root == nullptr)
             root = new TourPackage(name);
-        else
-            cout << "Root already exists.\n";
     }
 
     void addPackage(string parent, string name, char side) {
-        if (root == nullptr) {
-            cout << "Create root first.\n";
-            return;
-        }
+        if (root == nullptr) return;
         add(root, parent, name, side);
     }
 
     void displayTree() {
-        if (root == nullptr) cout << "No packages to display.\n";
-        else display(root, 0);
+        if (root == nullptr)
+            cout << "No packages to display.\n";
+        else
+            display(root, 0);
     }
 };
 
 int main() {
     TourTree tree;
-    int choice;
-    string name, parent;
-    char side;
 
-    cout << "===== TOUR PACKAGE MANAGEMENT SYSTEM =====\n";
-    do {
-        cout << "\n1. Create Root Package"
-             << "\n2. Add New Package (under a parent)"
-             << "\n3. Display All Packages"
-             << "\n4. Exit"
-             << "\nEnter your choice: ";
-        cin >> choice;
-        cin.ignore();
+    tree.createRoot("World Tours");
+    tree.addPackage("World Tours", "Europe Package", 'L');
+    tree.addPackage("World Tours", "Asia Package", 'R');
+    tree.addPackage("Europe Package", "France Tour", 'L');
+    tree.addPackage("Europe Package", "Italy Tour", 'R');
+    tree.addPackage("Asia Package", "Japan Tour", 'L');
+    tree.addPackage("Asia Package", "India Tour", 'R');
 
-        switch (choice) {
-        case 1:
-            cout << "Enter root package name: ";
-            getline(cin, name);
-            tree.createRoot(name);
-            break;
-        case 2:
-            cout << "Enter parent package name: ";
-            getline(cin, parent);
-            cout << "Enter new package name: ";
-            getline(cin, name);
-            cout << "Enter side (L/R): ";
-            cin >> side;
-            cin.ignore();
-            tree.addPackage(parent, name, side);
-            break;
-        case 3:
-            tree.displayTree();
-            break;
-        case 4:
-            cout << "Exiting program.\n";
-            break;
-        default:
-            cout << "Invalid choice.\n";
-        }
-    } while (choice != 4);
+    cout << "===== TOUR PACKAGE HIERARCHY =====\n";
+    tree.displayTree();
+
     return 0;
 }
